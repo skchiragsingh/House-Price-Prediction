@@ -7,8 +7,8 @@ from sklearn.ensemble import RandomForestRegressor
 
 
 st.set_page_config(
-    page_title="HomeValue | Price Predictor",
-    page_icon="🏠",
+    page_title="Meridian | Automated Valuation",
+    page_icon="📐",
     layout="centered",
     initial_sidebar_state="collapsed"
 )
@@ -42,160 +42,242 @@ model = load_model()
 st.markdown("""
 <style>
 
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@400;500&display=swap');
+
+:root {
+    --ink: #0B1E33;
+    --ink-2: #10233c;
+    --grid: rgba(95, 179, 212, 0.14);
+    --cyan: #5FB3D4;
+    --brass: #C9A468;
+    --parchment: #EDEDE3;
+    --muted: #7E93A8;
+}
+
 .stApp {
-    background:
-        radial-gradient(
-            circle at top left,
-            rgba(59, 130, 246, 0.18),
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at bottom right,
-            rgba(16, 185, 129, 0.12),
-            transparent 35%
-        ),
-        #0f172a;
+    background-color: var(--ink);
+    background-image:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
 }
 
 .block-container {
-    max-width: 900px;
-    padding-top: 3rem;
+    max-width: 760px;
+    padding-top: 2.5rem;
     padding-bottom: 3rem;
 }
 
-.hero {
-    text-align: center;
-    margin-bottom: 2.5rem;
+* {
+    font-family: 'Inter', sans-serif;
 }
 
-.logo {
-    width: 78px;
-    height: 78px;
-    margin: auto;
-    margin-bottom: 1rem;
+/* ---------- Hero ---------- */
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.hero {
+    text-align: center;
+    margin-bottom: 2.2rem;
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid rgba(201, 164, 104, 0.25);
+}
 
-    font-size: 38px;
-
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
-
-    border-radius: 22px;
-
-    box-shadow:
-        0 15px 40px
-        rgba(37, 99, 235, 0.35);
+.hero .eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 10px;
 }
 
 .hero h1 {
-    font-size: 3rem;
-    font-weight: 800;
-    margin-bottom: 0.5rem;
-    color: #f8fafc;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 2.6rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+    color: var(--parchment);
 }
 
 .hero p {
-    color: #94a3b8;
-    font-size: 1.1rem;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--muted);
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
+    margin-top: 10px;
 }
 
+/* ---------- Section label ---------- */
+
 .section-title {
-    color: #f8fafc;
-    font-size: 20px;
-    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--brass);
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-title::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: rgba(201, 164, 104, 0.3);
+}
+
+/* ---------- Parcel card wrapper ---------- */
+
+.parcel-card {
+    position: relative;
+    border: 1px solid rgba(95, 179, 212, 0.35);
+    padding: 28px 26px 10px 26px;
     margin-bottom: 20px;
 }
 
+.parcel-card::before,
+.parcel-card::after,
+.parcel-card .tick-br,
+.parcel-card .tick-bl {
+    content: "";
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid var(--brass);
+}
+
+.parcel-card::before {
+    top: -1px; left: -1px;
+    border-right: none; border-bottom: none;
+}
+
+.parcel-card::after {
+    top: -1px; right: -1px;
+    border-left: none; border-bottom: none;
+}
+
+/* ---------- Inputs ---------- */
+
 div[data-testid="stNumberInput"] label {
-    color: #cbd5e1 !important;
-    font-weight: 600;
+    font-family: 'IBM Plex Mono', monospace !important;
+    color: var(--muted) !important;
+    font-weight: 500 !important;
+    font-size: 11.5px !important;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
 }
 
 div[data-testid="stNumberInput"] input {
-    background-color: #111827 !important;
-    color: #f8fafc !important;
-    border: 1px solid #475569 !important;
-    border-radius: 10px !important;
+    font-family: 'IBM Plex Mono', monospace !important;
+    background-color: transparent !important;
+    color: var(--parchment) !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(95, 179, 212, 0.4) !important;
+    border-radius: 0 !important;
+    padding-left: 0 !important;
+    font-size: 16px !important;
 }
+
+div[data-testid="stNumberInput"] input:focus {
+    border-bottom: 1px solid var(--brass) !important;
+    box-shadow: none !important;
+}
+
+div[data-testid="stNumberInput"] button {
+    background-color: transparent !important;
+    border: 1px solid rgba(95, 179, 212, 0.25) !important;
+    color: var(--cyan) !important;
+}
+
+/* ---------- Button ---------- */
 
 .stButton > button {
     width: 100%;
-    height: 54px;
-    border: none;
-    border-radius: 14px;
-
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #7c3aed
-    );
-
-    color: white;
-    font-size: 17px;
+    height: 52px;
+    border: 1px solid var(--brass);
+    border-radius: 2px;
+    background: transparent;
+    color: var(--brass);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 13px;
     font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+    margin-top: 12px;
 }
 
 .stButton > button:hover {
-    transform: translateY(-2px);
-    box-shadow:
-        0 12px 30px
-        rgba(37, 99, 235, 0.35);
+    background: rgba(201, 164, 104, 0.1);
+    color: var(--parchment);
+    border-color: var(--parchment);
 }
 
-.prediction-card {
-    margin-top: 25px;
-    padding: 28px;
+/* ---------- Result stamp ---------- */
 
+.stamp-wrap {
+    display: flex;
+    justify-content: center;
+    margin-top: 32px;
+    animation: stampIn 0.35s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+.stamp {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: 2px solid var(--brass);
+    outline: 1px solid rgba(201, 164, 104, 0.35);
+    outline-offset: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     text-align: center;
-
-    background:
-        rgba(16, 185, 129, 0.12);
-
-    border:
-        1px solid
-        rgba(16, 185, 129, 0.4);
-
-    border-radius: 18px;
-
-    animation: fadeIn 0.4s ease;
 }
 
-.prediction-title {
-    color: #94a3b8;
-    font-size: 15px;
+.stamp .label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.2em;
+    color: var(--cyan);
+    text-transform: uppercase;
+    margin-bottom: 8px;
 }
 
-.prediction-value {
-    color: #6ee7b7;
-    font-size: 38px;
-    font-weight: 800;
+.stamp .value {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--parchment);
+}
+
+.stamp .sub {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
     margin-top: 8px;
 }
+
+@keyframes stampIn {
+    from { opacity: 0; transform: scale(1.4) rotate(-6deg); }
+    to   { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* ---------- Footer ---------- */
 
 .footer {
     text-align: center;
     margin-top: 3rem;
-    color: #64748b;
-    font-size: 14px;
-}
-
-@keyframes fadeIn {
-
-    from {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    padding-top: 1.4rem;
+    border-top: 1px solid rgba(95, 179, 212, 0.15);
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
 }
 
 </style>
@@ -204,38 +286,32 @@ div[data-testid="stNumberInput"] input {
 
 st.markdown("""
 <div class="hero">
-
-    <div class="logo">🏠</div>
-
-    <h1>HomeValue</h1>
-
-    <p>
-        AI-powered house price prediction using machine learning.
-    </p>
-
+    <div class="eyebrow">Parcel Assessment · Automated Valuation Model</div>
+    <h1>MERIDIAN</h1>
+    <p>ESTIMATE ISSUED FROM COORDINATE &amp; STRUCTURE DATA</p>
 </div>
 """, unsafe_allow_html=True)
 
 
 st.markdown(
-    '<div class="section-title">Enter Property Details</div>',
+    '<div class="section-title">Parcel Details</div>',
     unsafe_allow_html=True
 )
 
+st.markdown('<div class="parcel-card">', unsafe_allow_html=True)
 
 col1, col2 = st.columns(2)
-
 
 with col1:
 
     medinc = st.number_input(
-        "Median Income",
+        "Median Income (10k USD)",
         value=3.5,
         min_value=0.0
     )
 
     houseage = st.number_input(
-        "House Age",
+        "House Age (yrs)",
         value=25.0,
         min_value=0.0
     )
@@ -256,7 +332,7 @@ with col1:
 with col2:
 
     population = st.number_input(
-        "Population",
+        "Block Population",
         value=1000.0,
         min_value=0.0
     )
@@ -277,9 +353,11 @@ with col2:
         value=-118.0
     )
 
+st.markdown('</div>', unsafe_allow_html=True)
+
 
 predict = st.button(
-    "✨ Predict House Price"
+    "Run Appraisal"
 )
 
 
@@ -309,36 +387,28 @@ if predict:
     )
 
     with st.spinner(
-        "🤖 AI is analyzing property data..."
+        "Surveying parcel and cross-referencing comparables..."
     ):
 
-        time.sleep(1.5)
+        time.sleep(1.2)
 
         prediction = model.predict(
             input_data
         )[0]
 
     st.markdown(f"""
-    <div class="prediction-card">
-
-        <div class="prediction-title">
-            ESTIMATED HOUSE PRICE
+    <div class="stamp-wrap">
+        <div class="stamp">
+            <div class="label">Appraised Value</div>
+            <div class="value">${prediction * 100000:,.0f}</div>
+            <div class="sub">LAT {latitude:.2f} · LON {longitude:.2f}</div>
         </div>
-
-        <div class="prediction-value">
-            ${prediction * 100000:,.0f}
-        </div>
-
     </div>
     """, unsafe_allow_html=True)
 
 
 st.markdown("""
 <div class="footer">
-
-    Powered by Machine Learning
-    • Random Forest Regression
-    • California Housing Dataset
-
+    RANDOM FOREST REGRESSION · TRAINED ON CALIFORNIA HOUSING DATASET
 </div>
 """, unsafe_allow_html=True)
